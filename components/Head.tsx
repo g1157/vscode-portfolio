@@ -22,7 +22,7 @@ const CustomHead = ({ title }: CustomHeadProps) => {
         content="A developer and explorer building amazing web applications."
       />
       <meta property="og:image" content="https://imgur.com/4zi5KkQ.png" />
-      <meta property="og:url" content="https://leleo.top" />
+      <meta property="og:url" content="https://117911.xyz" />
       <meta name="twitter:card" content="summary_large_image" />
     </Head>
   );

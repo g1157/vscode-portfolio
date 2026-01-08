@@ -3,8 +3,8 @@ import styles from '@/styles/ContactCode.module.css';
 const contactItems = [
   {
     social: 'website',
-    link: 'leleo.top',
-    href: 'https://leleo.top',
+    link: '117911.xyz',
+    href: 'https://117911.xyz',
   },
   {
     social: 'email',
