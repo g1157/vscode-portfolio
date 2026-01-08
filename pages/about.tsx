@@ -20,7 +20,7 @@ const AboutPage = () => {
           <section className={styles.section}>
             <h2 className={styles.sectionTitle}>关于我</h2>
             <p className={styles.paragraph}>
-              我相信 <span className={styles.highlight}>Lifelong Growth</span> — 
+              我相信 <span className={styles.highlight}>Connect the dots</span> — 
               每一次学习和尝试都是成长的一部分。
             </p>
             <p className={styles.paragraph}>
@@ -44,7 +44,7 @@ const AboutPage = () => {
           <section className={styles.section}>
             <h2 className={styles.sectionTitle}>座右铭</h2>
             <p className={styles.paragraph}>
-              GO GO GO! 🚀
+              Lifelong Grow! 🚀
             </p>
           </section>
         </div>
