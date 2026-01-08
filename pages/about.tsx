@@ -5,23 +5,23 @@ const AboutPage = () => {
     <div className={styles.container}>
       <div className={styles.content}>
         <h1 className={styles.title}>Blue_noblue</h1>
-        <div className={styles.subtitle}>Developer & Explorer</div>
+        <div className={styles.subtitle}>Student & Enthusiast</div>
 
         <div className={styles.aboutContent}>
           <section className={styles.section}>
             <p className={styles.paragraph}>
-              Hey! 欢迎来到我的个人主页！我是一名热爱技术和探索的开发者。
+              Hey! 欢迎来到我的个人主页！我是一名热爱技术的学生和爱好者。
             </p>
             <p className={styles.paragraph}>
-              真诚固执 · 友善助人 · 独立思考 — 这是我的人生信条。
+              终身成长 — 这是我的人生信条。
             </p>
           </section>
 
           <section className={styles.section}>
             <h2 className={styles.sectionTitle}>关于我</h2>
             <p className={styles.paragraph}>
-              我相信 <span className={styles.highlight}>connect the dots</span> — 
-              每一次学习和尝试都是未来的铺垫。
+              我相信 <span className={styles.highlight}>Lifelong Growth</span> — 
+              每一次学习和尝试都是成长的一部分。
             </p>
             <p className={styles.paragraph}>
               保持好奇心，勇于尝试，持续成长。

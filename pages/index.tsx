@@ -15,8 +15,8 @@ export default function HomePage() {
     },
     { code: '  const developerInfo = {', type: 'variable' },
     { code: "    name: 'Blue_noblue',", type: 'array-item' },
-    { code: "    role: 'Developer & Explorer',", type: 'array-item' },
-    { code: "    bio: 'connect the dots.'", type: 'array-item' },
+    { code: "    role: 'Student & Enthusiast',", type: 'array-item' },
+    { code: "    bio: 'Lifelong Growth'", type: 'array-item' },
     { code: '  };', type: 'array-end' },
     { code: '', type: 'blank' },
     { code: '  useEffect(() => {', type: 'nested-function' },
@@ -94,12 +94,12 @@ export default function HomePage() {
             Blue<span className={styles.accentText}>_noblue</span>
           </h1>
 
-          <div className={styles.developerRole}>Developer & Explorer</div>
+          <div className={styles.developerRole}>Student & Enthusiast</div>
 
           <p className={styles.bio}>
-            真诚固执 · 友善助人 · 独立思考
+            Lifelong Growth
             <br />
-            GO GO GO!
+            终身成长
           </p>
 
           <div className={styles.actionLinks}>
