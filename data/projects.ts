@@ -24,6 +24,14 @@ export const projects: Project[] = [
     slug: 'sink',
   },
   {
+    title: 'Alle',
+    description:
+      'Email Management - 域名邮箱管理平台',
+    logo: '/logos/html_icon.svg',
+    link: 'https://email.117911.xyz',
+    slug: 'alle',
+  },
+  {
     title: 'Gemini Balance',
     description:
       'Gemini API 代理服务',
