@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { VscArrowRight } from 'react-icons/vsc';
+import { VscArrowRight, VscGithubAlt, VscRocket } from 'react-icons/vsc';
 
 import styles from '@/styles/HomePage.module.css';
 
@@ -105,6 +105,12 @@ export default function HomePage() {
           <div className={styles.actionLinks}>
             <Link href="/projects" className={styles.primaryLink}>
               View Projects <VscArrowRight />
+            </Link>
+            <Link href="/github" className={styles.secondaryLink}>
+              <VscGithubAlt /> GitHub
+            </Link>
+            <Link href="/ampcode" className={styles.secondaryLink}>
+              <VscRocket /> Ampcode
             </Link>
           </div>
         </div>

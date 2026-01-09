@@ -36,6 +36,11 @@ const explorerItems = [
     path: '/github',
     icon: '/logos/markdown_icon.svg',
   },
+  {
+    name: 'ampcode.ts',
+    path: '/ampcode',
+    icon: '/logos/vscode_icon.svg',
+  },
 ];
 
 const Explorer = () => {
