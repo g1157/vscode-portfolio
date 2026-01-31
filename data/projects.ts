@@ -55,4 +55,25 @@ export const projects: Project[] = [
     link: 'https://api.117911.xyz',
     slug: 'cli-proxy-api',
   },
+  {
+    title: 'clawbot',
+    description: 'Clawbot Project',
+    logo: '/logos/json_icon.svg',
+    link: 'https://clawdbot.117911.xyz/',
+    slug: 'clawbot',
+  },
+  {
+    title: '1panel_tx',
+    description: '1Panel Tencent Cloud Instance',
+    logo: '/logos/html_icon.svg',
+    link: 'https://tengxun1panel.117911.xyz',
+    slug: '1panel-tx',
+  },
+  {
+    title: '1panel_azure',
+    description: '1Panel Azure Instance',
+    logo: '/logos/html_icon.svg',
+    link: 'https://azure1panel.117911.xyz/',
+    slug: '1panel-azure',
+  },
 ];
