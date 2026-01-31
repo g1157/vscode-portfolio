@@ -16,36 +16,12 @@ export const projects: Project[] = [
     slug: 'blog',
   },
   {
-    title: 'Sink',
-    description:
-      '化繁为简 - 将无意义长连接用短链接形式分享并分析点击',
-    logo: '/logos/react_icon.svg',
-    link: 'https://sink.117911.xyz',
-    slug: 'sink',
-  },
-  {
-    title: 'Alle',
+    title: 'temp_email',
     description:
       'Email Management - 域名邮箱管理平台',
     logo: '/logos/html_icon.svg',
-    link: 'https://email.117911.xyz',
-    slug: 'alle',
-  },
-  {
-    title: 'Gemini Balance',
-    description:
-      'Gemini API 代理服务',
-    logo: '/logos/js_icon.svg',
-    link: 'http://44.244.114.59:8000',
-    slug: 'gemini-balance',
-  },
-  {
-    title: 'LibreTV',
-    description:
-      'Online watch films and Anime - 在线观影平台',
-    logo: '/logos/html_icon.svg',
-    link: 'https://libretv-cx1.pages.dev/',
-    slug: 'libretv',
+    link: 'https://email.117911.xyz/',
+    slug: 'temp-email',
   },
   {
     title: 'CLI Proxy API',
@@ -75,5 +51,29 @@ export const projects: Project[] = [
     logo: '/logos/html_icon.svg',
     link: 'https://azure1panel.117911.xyz/',
     slug: '1panel-azure',
+  },
+  {
+    title: 'Sink',
+    description:
+      '化繁为简 - 将无意义长连接用短链接形式分享并分析点击',
+    logo: '/logos/react_icon.svg',
+    link: 'https://sink.117911.xyz',
+    slug: 'sink',
+  },
+  {
+    title: 'Gemini Balance',
+    description:
+      'Gemini API 代理服务',
+    logo: '/logos/js_icon.svg',
+    link: 'http://44.244.114.59:8000',
+    slug: 'gemini-balance',
+  },
+  {
+    title: 'LibreTV',
+    description:
+      'Online watch films and Anime - 在线观影平台',
+    logo: '/logos/html_icon.svg',
+    link: 'https://libretv-cx1.pages.dev/',
+    slug: 'libretv',
   },
 ];
