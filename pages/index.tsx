@@ -109,9 +109,6 @@ export default function HomePage() {
             <Link href="/github" className={styles.secondaryLink}>
               <VscGithubAlt /> GitHub
             </Link>
-            <Link href="/ampcode" className={styles.secondaryLink}>
-              <VscRocket /> Ampcode
-            </Link>
           </div>
         </div>
       </div>
