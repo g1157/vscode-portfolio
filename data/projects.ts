@@ -76,4 +76,32 @@ export const projects: Project[] = [
     link: 'https://libretv-cx1.pages.dev/',
     slug: 'libretv',
   },
+  {
+    title: 'AstrBot',
+    description: 'AstrBot - AI 聊天机器人平台',
+    logo: '/logos/json_icon.svg',
+    link: 'https://astrbot.117911.xyz',
+    slug: 'astrbot',
+  },
+  {
+    title: 'NapCat',
+    description: 'NapCat - QQ Bot 框架',
+    logo: '/logos/json_icon.svg',
+    link: 'https://napcat.117911.xyz',
+    slug: 'napcat',
+  },
+  {
+    title: 'TeamGPT',
+    description: 'TeamGPT - 团队 AI 协作平台',
+    logo: '/logos/react_icon.svg',
+    link: 'https://teamgpt.117911.xyz',
+    slug: 'teamgpt',
+  },
+  {
+    title: 'Grok2API',
+    description: 'Grok API Proxy - Grok API 代理服务',
+    logo: '/logos/js_icon.svg',
+    link: 'https://grok2api.a1157143860.workers.dev',
+    slug: 'grok2api',
+  },
 ];
