@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { VscArrowRight, VscGithubAlt, VscRocket } from 'react-icons/vsc';
+import { VscArrowRight, VscGithubAlt } from 'react-icons/vsc';
 
 import styles from '@/styles/HomePage.module.css';
 

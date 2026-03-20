@@ -9,12 +9,20 @@ export interface Article {
   comments_count: number;
 }
 
+export type ProjectCategory =
+  | 'ai-services'
+  | 'bots-collaboration'
+  | 'developer-tools'
+  | 'infrastructure'
+  | 'content-media';
+
 export interface Project {
   title: string;
   description: string;
   logo: string;
   link: string;
   slug: string;
+  category: ProjectCategory;
 }
 
 export interface Repo {
