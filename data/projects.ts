@@ -89,7 +89,7 @@ export const projects: Project[] = [
     logo: '/logos/react_icon.svg',
     link: 'https://teamgpt.117911.xyz',
     slug: 'teamgpt',
-    category: 'bots-collaboration',
+    category: 'ai-services',
   },
   {
     title: 'AstrBot',
@@ -129,7 +129,7 @@ export const projects: Project[] = [
     logo: '/logos/react_icon.svg',
     link: 'https://sink.117911.xyz',
     slug: 'sink',
-    category: 'developer-tools',
+    category: 'content-media',
   },
   {
     title: 'Render',
@@ -145,7 +145,7 @@ export const projects: Project[] = [
     logo: '/logos/html_icon.svg',
     link: 'https://cpa.117911.xyz/',
     slug: 'cpa',
-    category: 'infrastructure',
+    category: 'ai-services',
   },
   {
     title: 'temp_email',
