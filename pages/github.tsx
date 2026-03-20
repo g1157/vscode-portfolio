@@ -7,12 +7,81 @@ import { Repo, User } from '@/types';
 
 import styles from '@/styles/GithubPage.module.css';
 
+const DEFAULT_GITHUB_USERNAME = 'g1157';
+
 interface GithubPageProps {
   repos: Repo[];
   user: User;
+  username: string;
 }
 
-const GithubPage = ({ repos, user }: GithubPageProps) => {
+const createFallbackUser = (username: string): User => ({
+  login: username,
+  avatar_url: `https://github.com/${username}.png`,
+  public_repos: 0,
+  followers: 0,
+});
+
+const normalizeUser = (value: unknown, username: string): User => {
+  if (!value || typeof value !== 'object') {
+    return createFallbackUser(username);
+  }
+
+  const user = value as Record<string, unknown>;
+
+  return {
+    login:
+      typeof user.login === 'string' && user.login
+        ? user.login
+        : username,
+    avatar_url:
+      typeof user.avatar_url === 'string' && user.avatar_url
+        ? user.avatar_url
+        : `https://github.com/${username}.png`,
+    public_repos:
+      typeof user.public_repos === 'number' ? user.public_repos : 0,
+    followers: typeof user.followers === 'number' ? user.followers : 0,
+  };
+};
+
+const normalizeRepos = (value: unknown): Repo[] => {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value
+    .filter((repo): repo is Record<string, unknown> => !!repo && typeof repo === 'object')
+    .map((repo) => ({
+      id: typeof repo.id === 'number' ? repo.id : 0,
+      name: typeof repo.name === 'string' ? repo.name : 'unknown',
+      description: typeof repo.description === 'string' ? repo.description : '',
+      language: typeof repo.language === 'string' ? repo.language : '',
+      watchers: typeof repo.watchers === 'number' ? repo.watchers : 0,
+      forks: typeof repo.forks === 'number' ? repo.forks : 0,
+      stargazers_count:
+        typeof repo.stargazers_count === 'number' ? repo.stargazers_count : 0,
+      html_url: typeof repo.html_url === 'string' ? repo.html_url : '#',
+      homepage: typeof repo.homepage === 'string' ? repo.homepage : '',
+    }))
+    .filter((repo) => repo.id !== 0 && repo.html_url !== '#');
+};
+
+const fetchGitHubJson = async (url: string) => {
+  const response = await fetch(url, {
+    headers: {
+      Accept: 'application/vnd.github+json',
+    },
+  });
+
+  if (!response.ok) {
+    console.warn(`GitHub API request failed: ${response.status} ${url}`);
+    return null;
+  }
+
+  return response.json();
+};
+
+const GithubPage = ({ repos, user, username }: GithubPageProps) => {
   return (
     <div className={styles.layout}>
       <div className={styles.pageHeading}>
@@ -61,7 +130,7 @@ const GithubPage = ({ repos, user }: GithubPageProps) => {
         </div>
         <div className={styles.contributions}>
           <GitHubCalendar
-            username={process.env.NEXT_PUBLIC_GITHUB_USERNAME!}
+            username={username}
             hideColorLegend
             hideMonthLabels
             colorScheme="dark"
@@ -80,18 +149,21 @@ const GithubPage = ({ repos, user }: GithubPageProps) => {
 };
 
 export async function getStaticProps() {
-  const userRes = await fetch(
-    `https://api.github.com/users/${process.env.NEXT_PUBLIC_GITHUB_USERNAME}`
-  );
-  const user = await userRes.json();
+  const username =
+    process.env.NEXT_PUBLIC_GITHUB_USERNAME?.trim() || DEFAULT_GITHUB_USERNAME;
 
-  const repoRes = await fetch(
-    `https://api.github.com/users/${process.env.NEXT_PUBLIC_GITHUB_USERNAME}/repos?sort=pushed&per_page=6`
-  );
-  const repos = await repoRes.json();
+  const [userData, repoData] = await Promise.all([
+    fetchGitHubJson(`https://api.github.com/users/${username}`),
+    fetchGitHubJson(
+      `https://api.github.com/users/${username}/repos?sort=pushed&per_page=6`
+    ),
+  ]);
+
+  const user = normalizeUser(userData, username);
+  const repos = normalizeRepos(repoData);
 
   return {
-    props: { title: 'GitHub', repos, user },
+    props: { title: 'GitHub', repos, user, username },
   };
 }
 
