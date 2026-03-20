@@ -3,6 +3,12 @@ import type { Article } from '@/data/articles';
 const BLOG_BASE_URL = 'https://blog.117911.xyz';
 const BLOG_ATOM_URL = `${BLOG_BASE_URL}/atom.xml`;
 const MAX_DESCRIPTION_LENGTH = 110;
+const ARTICLE_META_IMAGE_SELECTORS = [
+  'property="og:image"',
+  'property="og:image:url"',
+  'name="twitter:image"',
+  'itemprop="image"',
+] as const;
 
 const decodeXmlEntities = (value: string) =>
   value
@@ -74,6 +80,42 @@ const extractCover = (content: string) => {
   return imageMatch?.[1] ? resolveBlogUrl(decodeXmlEntities(imageMatch[1])) : '';
 };
 
+const extractMetaContent = (html: string, selector: string) => {
+  const directMatch = html.match(
+    new RegExp(
+      `<meta[^>]+${selector}[^>]+content=(?:"([^"]+)"|'([^']+)')`,
+      'i'
+    )
+  );
+
+  if (directMatch?.[1] || directMatch?.[2]) {
+    return decodeXmlEntities(directMatch[1] ?? directMatch[2]);
+  }
+
+  const reverseMatch = html.match(
+    new RegExp(
+      `<meta[^>]+content=(?:"([^"]+)"|'([^']+)')[^>]+${selector}`,
+      'i'
+    )
+  );
+
+  return reverseMatch?.[1] || reverseMatch?.[2]
+    ? decodeXmlEntities(reverseMatch[1] ?? reverseMatch[2])
+    : '';
+};
+
+const extractArticleMetaCover = (html: string) => {
+  for (const selector of ARTICLE_META_IMAGE_SELECTORS) {
+    const value = extractMetaContent(html, selector);
+
+    if (value) {
+      return resolveBlogUrl(value);
+    }
+  }
+
+  return '';
+};
+
 const formatDate = (publishedAt: string) => {
   const date = new Date(publishedAt);
   if (Number.isNaN(date.getTime())) {
@@ -83,34 +125,53 @@ const formatDate = (publishedAt: string) => {
   return date.toISOString().slice(0, 10);
 };
 
-const parseAtomFeed = (xml: string, limit: number): Article[] => {
+const parseAtomFeed = async (xml: string, limit: number): Promise<Article[]> => {
   const entryMatches = [...xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)];
 
-  return entryMatches.slice(0, limit).map((match, index) => {
-    const entry = match[1];
-    const content = extractTagContent(entry, 'content');
-    const title = decodeXmlEntities(extractTagContent(entry, 'title'));
-    const id =
-      decodeXmlEntities(extractTagContent(entry, 'id')) ||
-      `${title}-${index + 1}`;
-    const publishedAt = decodeXmlEntities(extractTagContent(entry, 'published'));
-    const tags = [...entry.matchAll(/<category[^>]*term="([^"]+)"/g)]
-      .map((categoryMatch) => decodeXmlEntities(categoryMatch[1]))
-      .filter(Boolean);
-    const linkMatch = entry.match(/<link[^>]*href="([^"]+)"/);
-    const url = linkMatch?.[1] ? resolveBlogUrl(linkMatch[1]) : BLOG_BASE_URL;
-    const cover = extractCover(content);
+  return Promise.all(
+    entryMatches.slice(0, limit).map(async (match, index) => {
+      const entry = match[1];
+      const content = extractTagContent(entry, 'content');
+      const title = decodeXmlEntities(extractTagContent(entry, 'title'));
+      const id =
+        decodeXmlEntities(extractTagContent(entry, 'id')) ||
+        `${title}-${index + 1}`;
+      const publishedAt = decodeXmlEntities(extractTagContent(entry, 'published'));
+      const tags = [...entry.matchAll(/<category[^>]*term="([^"]+)"/g)]
+        .map((categoryMatch) => decodeXmlEntities(categoryMatch[1]))
+        .filter(Boolean);
+      const linkMatch = entry.match(/<link[^>]*href="([^"]+)"/);
+      const url = linkMatch?.[1] ? resolveBlogUrl(linkMatch[1]) : BLOG_BASE_URL;
+      const feedCover = extractCover(content);
 
-    return {
-      id,
-      title,
-      description: extractDescription(content),
-      url,
-      date: formatDate(publishedAt),
-      tags,
-      ...(cover ? { cover } : {}),
-    };
-  });
+      let cover = feedCover;
+
+      try {
+        const articleResponse = await fetch(url, {
+          headers: {
+            Accept: 'text/html,application/xhtml+xml',
+          },
+        });
+
+        if (articleResponse.ok) {
+          const articleHtml = await articleResponse.text();
+          cover = extractArticleMetaCover(articleHtml) || feedCover;
+        }
+      } catch {
+        cover = feedCover;
+      }
+
+      return {
+        id,
+        title,
+        description: extractDescription(content),
+        url,
+        date: formatDate(publishedAt),
+        tags,
+        ...(cover ? { cover } : {}),
+      };
+    })
+  );
 };
 
 export const fetchLatestBlogArticles = async (
