@@ -21,6 +21,20 @@ For other features and themes suggestions, please open an issue.
 
 For fetching your articles from dev.to, create an `.env.local` file inside the project directory. Check the `.env.local.example` file for more information.
 
+## Scheduled Cloudflare Pages Rebuild
+
+This repository includes a GitHub Actions workflow at `.github/workflows/scheduled-pages-rebuild.yml` that checks once per day and triggers a Cloudflare Pages rebuild every 3 days. It also supports manual runs from the Actions tab.
+
+To enable it:
+
+1. Create a Deploy Hook in your Cloudflare Pages project.
+2. Add the hook URL to the GitHub repository secret `CLOUDFLARE_PAGES_DEPLOY_HOOK`.
+3. Keep the workflow file on the default branch so the schedule stays active.
+
+The workflow uses a fixed anchor date (`2026-03-20`) to preserve a stable 3-day cadence, since GitHub cron cannot express an exact "every 3 days" schedule directly.
+
+This is useful for static pages that fetch external content at build time, such as the blog articles feed on `/articles`.
+
 ## Running Development Server
 
 ```bash

@@ -1,0 +1,55 @@
+name: Scheduled Cloudflare Pages Rebuild
+
+on:
+  schedule:
+    - cron: '17 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: scheduled-cloudflare-pages-rebuild
+  cancel-in-progress: false
+
+jobs:
+  trigger-deploy-hook:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Validate deploy hook secret
+        env:
+          DEPLOY_HOOK_URL: ${{ secrets.CLOUDFLARE_PAGES_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$DEPLOY_HOOK_URL" ]; then
+            echo "CLOUDFLARE_PAGES_DEPLOY_HOOK is not configured."
+            exit 1
+          fi
+
+      - name: Check 3-day cadence
+        id: cadence
+        if: github.event_name == 'schedule'
+        env:
+          ANCHOR_DATE: '2026-03-20'
+        run: |
+          today="$(date -u +%F)"
+          today_epoch="$(date -u -d "$today" +%s)"
+          anchor_epoch="$(date -u -d "$ANCHOR_DATE" +%s)"
+          days_since_anchor="$(((today_epoch - anchor_epoch) / 86400))"
+
+          if [ "$((days_since_anchor % 3))" -eq 0 ]; then
+            echo "should_trigger=true" >> "$GITHUB_OUTPUT"
+            echo "Triggering scheduled rebuild on $today"
+          else
+            echo "should_trigger=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping scheduled rebuild on $today"
+          fi
+
+      - name: Trigger Cloudflare Pages rebuild
+        if: github.event_name == 'workflow_dispatch' || steps.cadence.outputs.should_trigger == 'true'
+        env:
+          DEPLOY_HOOK_URL: ${{ secrets.CLOUDFLARE_PAGES_DEPLOY_HOOK }}
+        run: |
+          curl --fail --show-error --silent \
+            --request POST \
+            "$DEPLOY_HOOK_URL"
