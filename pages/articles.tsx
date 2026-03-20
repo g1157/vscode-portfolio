@@ -1,8 +1,15 @@
 import Image from 'next/image';
-import { articles } from '@/data/articles';
+
+import { articles as fallbackArticles, type Article } from '@/data/articles';
+import { fetchLatestBlogArticles } from '@/lib/blog';
+
 import styles from '@/styles/ArticlesPage.module.css';
 
-const ArticlesPage = () => {
+interface ArticlesPageProps {
+  articles: Article[];
+}
+
+const ArticlesPage = ({ articles }: ArticlesPageProps) => {
   return (
     <div className={styles.layout}>
       <h1 className={styles.pageTitle}>My Articles</h1>
@@ -16,7 +23,7 @@ const ArticlesPage = () => {
         >
           我的博客
         </a>{' '}
-        的文章分享 - 记录生活、影评、动漫与思考
+        的文章分享 - 构建时自动同步最近几篇文章
       </p>
       <div className={styles.container}>
         {articles.map((article) => (
@@ -60,8 +67,20 @@ const ArticlesPage = () => {
 };
 
 export async function getStaticProps() {
+  let articles = fallbackArticles;
+
+  try {
+    const latestArticles = await fetchLatestBlogArticles(6);
+
+    if (latestArticles.length > 0) {
+      articles = latestArticles;
+    }
+  } catch (error) {
+    console.error('Failed to fetch latest blog articles:', error);
+  }
+
   return {
-    props: { title: 'Articles' },
+    props: { title: 'Articles', articles },
   };
 }
 

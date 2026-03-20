@@ -1,5 +1,5 @@
 export interface Article {
-  id: number;
+  id: string;
   title: string;
   description: string;
   url: string;
@@ -8,9 +8,9 @@ export interface Article {
   cover?: string;
 }
 
-export const articles: Article[] = [
+export const fallbackArticles: Article[] = [
   {
-    id: 29,
+    id: '29',
     title: '沉默的主角',
     description: '关于播客、工程师思维方式与职场成长的思考',
     url: 'https://blog.117911.xyz/29-沉默的主角/',
@@ -19,7 +19,7 @@ export const articles: Article[] = [
     cover: 'https://gcore.jsdelivr.net/gh/p1157/blog-img@main/cos3.webp',
   },
   {
-    id: 28,
+    id: '28',
     title: 'Zootopia II',
     description: '疯狂动物城2影评 - 关于友情与冒险',
     url: 'https://blog.117911.xyz/28-Zootopia-II/',
@@ -28,7 +28,7 @@ export const articles: Article[] = [
     cover: 'https://gcore.jsdelivr.net/gh/p1157/blog-img@main/zoo2.webp',
   },
   {
-    id: 27,
+    id: '27',
     title: '羁绊者',
     description: '关于动漫中的羁绊、青春与人际关系',
     url: 'https://blog.117911.xyz/27-羁绊者/',
@@ -37,7 +37,7 @@ export const articles: Article[] = [
     cover: 'https://gcore.jsdelivr.net/gh/p1157/blog-img@main/jibanzhe%20(11).webp',
   },
   {
-    id: 26,
+    id: '26',
     title: '真物',
     description: '仍在疑惑 - 关于真实的思考',
     url: 'https://blog.117911.xyz/26-真物/',
@@ -46,7 +46,7 @@ export const articles: Article[] = [
     cover: 'https://gcore.jsdelivr.net/gh/p1157/blog-img@main/%E6%9E%9C%E7%84%B6%E6%88%91%E7%9A%84%E9%9D%92%E6%98%A5%E6%88%80%E6%84%9B%E5%96%9C%E5%8A%87%E6%90%9E%E9%8C%AF%E4%BA%86250.webp',
   },
   {
-    id: 25,
+    id: '25',
     title: 'Space Cowboy 星际牛仔',
     description: '一部让我在各个方面都很喜欢的动漫，立刻就进入了个人喜欢的历史前二',
     url: 'https://blog.117911.xyz/25-星际牛仔/',
@@ -55,7 +55,7 @@ export const articles: Article[] = [
     cover: 'https://gcore.jsdelivr.net/gh/p1157/blog-img@main/cowboy.webp',
   },
   {
-    id: 24,
+    id: '24',
     title: 'ラヴレター 情书',
     description: '日本电影《情书》影评 - 关于青春与爱情',
     url: 'https://blog.117911.xyz/24-ラヴレター/',
@@ -64,3 +64,5 @@ export const articles: Article[] = [
     cover: 'https://gcore.jsdelivr.net/gh/p1157/blog-img@main/p2922046305.webp',
   },
 ];
+
+export const articles = fallbackArticles;

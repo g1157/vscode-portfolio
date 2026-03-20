@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { hostname: 'res.cloudinary.com', protocol: 'https' },
       { hostname: 'avatars.githubusercontent.com', protocol: 'https' },
+      { hostname: 'blog.117911.xyz', protocol: 'https' },
       { hostname: 'imgur.com', protocol: 'https' },
       { hostname: 'media2.dev.to', protocol: 'https' },
       { hostname: 'gcore.jsdelivr.net', protocol: 'https' },
