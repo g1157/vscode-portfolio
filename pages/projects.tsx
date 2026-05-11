@@ -4,15 +4,21 @@ import ProjectCard from '@/components/ProjectCard';
 import {
   projectCategoryMeta,
   projectCategoryOrder,
-  projects,
+  projects as fallbackProjects,
 } from '@/data/projects';
-import { ProjectCategory } from '@/types';
+import { fetchAutomatedProjects } from '@/lib/projects';
+import { Project, ProjectCategory } from '@/types';
 
 import styles from '@/styles/ProjectsPage.module.css';
 
 type ProjectFilter = ProjectCategory | 'all';
 
-const ProjectsPage = () => {
+interface ProjectsPageProps {
+  projects: Project[];
+  lastUpdated: string;
+}
+
+const ProjectsPage = ({ projects, lastUpdated }: ProjectsPageProps) => {
   const [activeCategory, setActiveCategory] = useState<ProjectFilter>('all');
 
   const groupedProjects = useMemo(
@@ -28,7 +34,7 @@ const ProjectsPage = () => {
           ),
         }))
         .filter((group) => group.projects.length > 0),
-    [activeCategory]
+    [activeCategory, projects]
   );
 
   return (
@@ -36,7 +42,11 @@ const ProjectsPage = () => {
       <div className={styles.pageHeading}>
         <h1 className={styles.pageTitle}>Projects &amp; Services</h1>
         <p className={styles.pageSubtitle}>
-          按用途整理当前常用的项目、站点与服务入口，支持按类别快速筛选。
+          按用途整理当前常用的项目、站点与服务入口；页面构建时会自动从 GitHub
+          仓库同步最新公开项目，更新仓库后会随部署刷新。
+        </p>
+        <p className={styles.updateNote}>
+          Last synced from GitHub: {lastUpdated}
         </p>
 
         <div className={styles.filters}>
@@ -100,8 +110,22 @@ const ProjectsPage = () => {
 };
 
 export async function getStaticProps() {
+  let projects = fallbackProjects;
+  let lastUpdated = 'static fallback';
+
+  try {
+    const automatedProjects = await fetchAutomatedProjects();
+
+    if (automatedProjects.length > 0) {
+      projects = automatedProjects;
+      lastUpdated = new Date().toISOString().slice(0, 10);
+    }
+  } catch (error) {
+    console.error('Failed to fetch automated GitHub projects:', error);
+  }
+
   return {
-    props: { title: 'Projects' },
+    props: { title: 'Projects', projects, lastUpdated },
   };
 }
 
