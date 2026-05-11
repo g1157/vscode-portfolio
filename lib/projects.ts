@@ -1,8 +1,9 @@
 import { defaultAutomationRule, projectAutomationRules } from '@/data/projectAutomation';
+import { createGitHubHeaders } from '@/lib/github';
 import type { Project } from '@/types';
 
 const GITHUB_USERNAME = 'g1157';
-const MAX_AUTOMATED_PROJECTS = 10;
+const MAX_AUTOMATED_PROJECTS = 40;
 const GITHUB_API_REPOS_URL = `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=pushed&per_page=100`;
 
 interface GitHubRepoPayload {
@@ -29,7 +30,7 @@ const findRule = (repo: GitHubRepoPayload) => {
   const name = repo.name ?? '';
 
   return projectAutomationRules.find((rule) => {
-    if (rule.repo === fullName) {
+    if (rule.repo.toLowerCase() === fullName.toLowerCase()) {
       return true;
     }
 
@@ -78,9 +79,7 @@ const repoToProject = (repo: GitHubRepoPayload): Project => {
 
 export const fetchAutomatedProjects = async (): Promise<Project[]> => {
   const response = await fetch(GITHUB_API_REPOS_URL, {
-    headers: {
-      Accept: 'application/vnd.github+json',
-    },
+    headers: createGitHubHeaders(),
   });
 
   if (!response.ok) {
@@ -107,4 +106,39 @@ export const fetchAutomatedProjects = async (): Promise<Project[]> => {
     seen.add(project.slug);
     return true;
   });
+};
+
+const normalizeValue = (value: string) =>
+  value
+    .trim()
+    .toLowerCase()
+    .replace(/^https?:\/\//, '')
+    .replace(/^www\./, '')
+    .replace(/\/+$/, '')
+    .replace(/[^a-z0-9./_-]+/g, '-');
+
+const projectKeys = (project: Project) => [
+  normalizeValue(project.slug),
+  normalizeValue(project.title),
+  normalizeValue(project.link),
+];
+
+export const mergeProjects = (
+  curatedProjects: Project[],
+  automatedProjects: Project[]
+) => {
+  const seen = new Set<string>();
+  const merged: Project[] = [];
+
+  [...curatedProjects, ...automatedProjects].forEach((project) => {
+    const keys = projectKeys(project);
+    if (keys.some((key) => seen.has(key))) {
+      return;
+    }
+
+    keys.forEach((key) => seen.add(key));
+    merged.push(project);
+  });
+
+  return merged;
 };

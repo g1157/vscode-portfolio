@@ -6,7 +6,7 @@ import {
   projectCategoryOrder,
   projects as fallbackProjects,
 } from '@/data/projects';
-import { fetchAutomatedProjects } from '@/lib/projects';
+import { fetchAutomatedProjects, mergeProjects } from '@/lib/projects';
 import { Project, ProjectCategory } from '@/types';
 
 import styles from '@/styles/ProjectsPage.module.css';
@@ -42,8 +42,8 @@ const ProjectsPage = ({ projects, lastUpdated }: ProjectsPageProps) => {
       <div className={styles.pageHeading}>
         <h1 className={styles.pageTitle}>Projects &amp; Services</h1>
         <p className={styles.pageSubtitle}>
-          按用途整理当前常用的项目、站点与服务入口；页面构建时会自动从 GitHub
-          仓库同步最新公开项目，更新仓库后会随部署刷新。
+          手动整理常用服务入口，并在页面构建时自动从 GitHub 同步最新公开项目；
+          更新仓库后会随 Cloudflare Pages 部署刷新。
         </p>
         <p className={styles.updateNote}>
           Last synced from GitHub: {lastUpdated}
@@ -117,7 +117,7 @@ export async function getStaticProps() {
     const automatedProjects = await fetchAutomatedProjects();
 
     if (automatedProjects.length > 0) {
-      projects = automatedProjects;
+      projects = mergeProjects(fallbackProjects, automatedProjects);
       lastUpdated = new Date().toISOString().slice(0, 10);
     }
   } catch (error) {

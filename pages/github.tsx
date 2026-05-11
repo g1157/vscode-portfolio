@@ -2,6 +2,7 @@ import Image from 'next/image';
 import GitHubCalendar from 'react-github-calendar';
 import { VscRepo, VscPerson } from 'react-icons/vsc';
 
+import { createGitHubHeaders } from '@/lib/github';
 import RepoCard from '@/components/RepoCard';
 import { Repo, User } from '@/types';
 
@@ -68,9 +69,7 @@ const normalizeRepos = (value: unknown): Repo[] => {
 
 const fetchGitHubJson = async (url: string) => {
   const response = await fetch(url, {
-    headers: {
-      Accept: 'application/vnd.github+json',
-    },
+    headers: createGitHubHeaders(),
   });
 
   if (!response.ok) {
