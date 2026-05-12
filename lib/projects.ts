@@ -25,6 +25,22 @@ const slugify = (value: string) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '') || 'project';
 
+const isWebProjectLink = (value?: string | null) => {
+  if (!value) {
+    return false;
+  }
+
+  try {
+    const url = new URL(value);
+    const hostname = url.hostname.toLowerCase();
+    const isGitHubHost = hostname === 'github.com' || hostname.endsWith('.github.com');
+
+    return ['http:', 'https:'].includes(url.protocol) && !isGitHubHost;
+  } catch {
+    return false;
+  }
+};
+
 const findRule = (repo: GitHubRepoPayload) => {
   const fullName = repo.full_name ?? '';
   const name = repo.name ?? '';
@@ -42,8 +58,22 @@ const findRule = (repo: GitHubRepoPayload) => {
   });
 };
 
+const getProjectLink = (repo: GitHubRepoPayload) => {
+  const rule = findRule(repo);
+
+  if (isWebProjectLink(rule?.link)) {
+    return rule?.link ?? '#';
+  }
+
+  if (isWebProjectLink(repo.homepage)) {
+    return repo.homepage ?? '#';
+  }
+
+  return '';
+};
+
 const isDisplayableRepo = (repo: GitHubRepoPayload) => {
-  if (!repo.full_name || !repo.name || !repo.html_url) {
+  if (!repo.full_name || !repo.name) {
     return false;
   }
 
@@ -52,20 +82,24 @@ const isDisplayableRepo = (repo: GitHubRepoPayload) => {
   }
 
   const rule = findRule(repo);
-  return rule?.include !== false;
+  if (rule?.include === false) {
+    return false;
+  }
+
+  return !!getProjectLink(repo);
 };
 
 const repoToProject = (repo: GitHubRepoPayload): Project => {
   const rule = findRule(repo);
   const title = rule?.title ?? repo.name ?? 'GitHub Project';
-  const link = rule?.link || repo.homepage || repo.html_url || '#';
+  const link = getProjectLink(repo);
   const description =
     rule?.description ||
     repo.description ||
     [repo.language, repo.pushed_at ? `updated ${repo.pushed_at.slice(0, 10)}` : '']
       .filter(Boolean)
       .join(' · ') ||
-    'GitHub project';
+    'Web project';
 
   return {
     title,
@@ -131,6 +165,10 @@ export const mergeProjects = (
   const merged: Project[] = [];
 
   [...curatedProjects, ...automatedProjects].forEach((project) => {
+    if (!isWebProjectLink(project.link)) {
+      return;
+    }
+
     const keys = projectKeys(project);
     if (keys.some((key) => seen.has(key))) {
       return;

@@ -42,11 +42,11 @@ const ProjectsPage = ({ projects, lastUpdated }: ProjectsPageProps) => {
       <div className={styles.pageHeading}>
         <h1 className={styles.pageTitle}>Projects &amp; Services</h1>
         <p className={styles.pageSubtitle}>
-          手动整理常用服务入口，并在页面构建时自动从 GitHub 同步最新公开项目；
-          更新仓库后会随 Cloudflare Pages 部署刷新。
+          只展示有实际网页或服务入口的项目；公开仓库只有配置了非 GitHub 主页时，
+          才会在构建时同步到这里。
         </p>
         <p className={styles.updateNote}>
-          Last synced from GitHub: {lastUpdated}
+          Last checked for web links: {lastUpdated}
         </p>
 
         <div className={styles.filters}>

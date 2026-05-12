@@ -18,14 +18,6 @@ const formatProjectHost = (link: string) => {
   }
 };
 
-const getVisitLabel = (link: string) => {
-  try {
-    return new URL(link).host === 'github.com' ? 'Open repo' : 'Open site';
-  } catch {
-    return 'Open link';
-  }
-};
-
 const ProjectCard = ({ project }: ProjectCardProps) => {
   const category = projectCategoryMeta[project.category];
 
@@ -63,7 +55,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
             <VscGlobe className={styles.hostIcon} />
             {formatProjectHost(project.link)}
           </span>
-          <span className={styles.visitLabel}>{getVisitLabel(project.link)}</span>
+          <span className={styles.visitLabel}>Open site</span>
         </div>
       </div>
     </a>
